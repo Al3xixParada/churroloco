@@ -1,0 +1,38 @@
+{% extends '/sitio/base.html'%}
+
+{% block title %}Index {%endblock%}
+
+{% block body%}
+
+
+<h1>Bienvenidos</h1> 
+<h2>Te damos la bienvenida a nuestra pagina web</h2>
+<P>Nuestra Pagina es una de las mejores en el mercardo y tenemos la mejor variedad en Nuestros Productos</P>
+<div id="imagen">
+<img src="/img/page/agropecuaria.png" width="100%" align="center">
+</div>
+
+<p>Nuestros horarios de atencion </p>
+    <p class="lead">
+      <a class="btn btn-success btn-lg" href="/productos" role="button">Ver Productos disponibles</a>
+    </p>
+<table class="table table-striped">
+  <table border="1px">
+  <thead>
+    <tr><th class="cuadro">HORARIO DE ATENCION</th></tr>
+  </thead>
+  <tbody>
+
+    <tr><td>LUNES A SABADO </td></tr>
+    <tr><td>MAÑANA 8 AM A 12  MEDIO DIA </td></tr>
+    <tr><td>TARDE 2 PM A 10 PM </td></tr> 
+  </tbody>
+</table>
+
+
+<br>
+
+
+
+
+    {% endblock%}

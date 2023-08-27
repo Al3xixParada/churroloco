@@ -1,0 +1,53 @@
+{% extends '/sitio/base.html'%}
+
+{% block title %}Productos{%endblock%}
+
+
+
+{% block nav %}
+<form class="d-flex" action="/productos/buscar" method="post" enctype="multipart/form-data">
+    <input name="txtbuscar" id="txtbuscar"  class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Buscar</button>
+  </form>
+  {%endblock%}
+{% block body%}
+
+        <br>
+        
+        <div class="container">
+            <div class="row centered_productos">
+                {% set cont = 0 %}
+                {% for producto in productos %}
+                    {% if cont == 4 %}
+                        <div class="card-group">
+                    {% endif %}
+                    <div class="card text-center mb-3" style="width: 18rem;">
+                        <div class="image-container">
+                            <img class="card-img-top" src="/img/products/{{producto[3]}}" alt="Title">
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">{{producto[1]}}</h6>
+                            <p class="card text-center mb-3">
+                                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                    <form action="/comprar" method="post">
+                                        <input value="{{producto[0]}}" type="hidden" name="txtID" id="txtID">
+                                        <button type="submit" class="btn btn-outline-primary">Comprar</button>
+                                    </form>                                    <!-- <button type="button" class="btn btn-outline-primary">-</button> -->
+                                    <!-- <p class="comprar">Comprar</p> -->
+                                    <!-- <button type="button" class="btn btn-outline-primary">+</button> -->
+                                </div>
+                            </p>
+                        </div>
+                    </div>
+                    {% set cont = cont + 1 %}
+                    {% if cont == 4 %}
+                        </div>
+                        <br>
+                        {% set cont = 0 %}
+                    {% endif %}
+                {% endfor %}
+                {% if cont != 0 %}
+                    </div>
+                {% endif %}
+            </div>
+{% endblock%}

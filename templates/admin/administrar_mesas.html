@@ -1,0 +1,102 @@
+{% extends '/admin/base.html' %}
+
+{% block title %}Productos {%endblock%}
+
+{% block body%}
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            {% with errores = get_flashed_messages(category_filter='error') %}
+                    {% if errores %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in errores %}
+                                <strong>{{ error }}</strong>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                {% with exitos = get_flashed_messages(category_filter='success') %}
+                    {% if exitos %}
+                        <div class="alert alert-success" role="alert">
+                            {% for exito in exitos %}
+                                <strong>{{ exito }}</strong>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            <div class="card">
+                <div class="card-header">
+                    Datos del producto
+                </div>
+                <div class="card-body">
+                    <form action="/admin/mesas/guardar" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="txtnumbermesa" class="form-label">Numero:</label>
+                            <input value="{{ get_flashed_messages(category_filter='nombre')[0] }}" type="number" class="form-control" name="txtnumbermesa" id="txtnumbermesa" aria-describedby="helpId" placeholder="Escriba el numero de la mesa">
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-outline-primary">Agregar</button>
+                        </div>
+                    </form>
+                    
+                </div>
+                    <div class="card-footer text-muted">
+                        
+                    </div>
+            </div>  
+        </div>
+        <div class="col-md-7">
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="text-center">
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Descripcion</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th colspan="2">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for producto in productos %}
+
+                        <tr>
+                            <td>
+                                <img width="60" src="/img/products/{{producto[3]}}" class="img-fluid rounded-top" alt="">
+                            </td>
+                            <td>{{producto[1]}}</td>
+                            <td>{{producto[2]}}</td>
+                            <td>{{producto[5]}}</td>
+                            <td>${{ "{:,.0f}".format(producto[4]) }}</td>
+                            <td>
+                                <!-- <a name="" id="" class="btn btn-success" href="{{producto[3]}}" role="button">Enlace </a> -->
+                                <a class="btn btn-outline-success" href="/img/products/{{producto[3]}}" download="{{producto[1]}}" role="button">Imagen</a> 
+                                
+                            </td>
+                            <td>
+                                <form action="/admin/mesas/borrar" method="post">
+                                    <input value="{{producto[0]}}" type="hidden" name="txtID" id="txtID">
+                                        <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                                    </form>
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            
+
+
+        </div>
+        
+    </div>
+</div>
+
+
+
+{%endblock%}

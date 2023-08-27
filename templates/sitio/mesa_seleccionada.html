@@ -1,0 +1,161 @@
+{% extends 'sitio/base.html' %}
+
+{% block title %}Comprar{% endblock %}
+
+{% block body %}
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Lista de Productos</h2>
+        
+            <form method="post" action="/mesa_seleccionada/{{infom_mesas[1]}}">
+                <ul class="list-group">
+                    {% set categorias_con_productos = {} %}
+                    {% for tipo_produc in tipo_producto %}
+                        {% set productos_filtrados = [] %}
+                        {% for producto in productos %}
+                            {% if producto.6 == tipo_produc.0 %}
+                                {% set _ = productos_filtrados.append(producto) %}
+                            {% endif %}
+                        {% endfor %}
+                        {% set _ = categorias_con_productos.update({tipo_produc.1: productos_filtrados}) %}
+                    {% endfor %}
+        
+                    {% for categoria, productos_filtrados in categorias_con_productos.items() %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center"
+                            style="background-color: lightblue; padding: 10px;">
+                            <div class="d-flex align-items-center">
+                                {{ categoria }}
+                            </div>
+                        </li>
+                        {% if productos_filtrados %}
+                            {% for producto in productos_filtrados %}
+                            <li class="list-group-item {% if producto[5] <= 0 %}producto-sin-existencia{% endif %}">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="form-check-label d-flex align-items-center" for="{{ producto[0] }}">
+                                        <img class="card-img-top-comprar" src="/img/products/{{ producto[3] }}" alt="" style="width: 40px; height: 40px; object-fit: contain;">
+                                        {{ producto[1] }}, {{producto[2]}}
+                                    </label>
+                                    <div class="btn-group d-flex justify-content-center align-items-center" role="group" aria-label="Basic outlined example">
+                                        <p class="card-title mb-0 mr-2 ml-1 ml-lg-3">Precio: $
+                                            {{ "{:,.0f}".format(producto[4]) }}</p>
+                                            
+                                        <button type="button" class="btn btn-outline-primary" {% if producto[5] <= 0 %}disabled{% endif %} onclick="decrementarCantidad('{{ producto[0] }}')">-</button>
+                                        <input value="0" class="text-center comprar" type="text" name="cantidad_{{ producto[0] }}" id="{{ producto[0] }}" min="0" data-disponible="{{ producto[5] }}" readonly style="width: 50px;">
+                                        <input type="hidden" name="nombre_usuario" id="nombre_usuario" value="{{session['users']}}">
+                                        <button type="button" class="btn btn-outline-primary" {% if producto[5] <= 0 %}disabled{% endif %} onclick="incrementarCantidad('{{ producto[0] }}')">+</button>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        {% else %}
+                        <li class="list-group-item disabled">
+                            No hay productos disponibles en esta categoría.
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+        
+                <!-- Agregar un botón de enviar al final del formulario -->
+                <div class="card mt-4 text-center">
+                    <button type="submit" class="btn btn-outline-info">Enviar</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="col-md-6">
+            <h2>Productos Seleccionados</h2>
+            <div class="card">
+                <div class="card-header">
+                    <h1>Pedido</h1>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="text-center">
+                                <th>Nombre</th>
+                                <th>Descripcion</th>
+                                <th>Precio c/u</th>
+                                <th>Cantidad</th>
+                                <th>Total del producto</th>
+                                <th colspan="2">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for carrito in carritos %}
+                            <tr>
+                                <td>{{ carrito[2] }}</td>
+                                <td>{{ carrito[3] }}</td>
+                                <td>$ {{ "{:,.0f}".format(carrito[4]) }}</td>
+                                <td>{{ carrito[5] }}</td>
+                                <td>$ {{ "{:,.0f}".format(carrito[4] * carrito[5]) }}</td>
+                                <td>
+                                    <form action="/mesa_seleccionada/{{infom_mesas[1]}}/borrar" method="post">
+                                        <input value="{{ carrito[0] }}" type="hidden" name="id_carrito" id="id_carrito">
+                                        <input value="{{ carrito[1] }}" type="hidden" name="id_producto" id="id_producto">
+                                        <input value="{{ carrito[5] }}" type="hidden" name="cantidad_carrito" id="cantidad_carrito">
+                                        <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="card mt-4 text-center">
+                        <h4 class="card-title">Precio Total: $ {{ "{:,.0f}".format(resultado_final) }}</h4>
+                        <form action="/mesa_seleccionada/{{infom_mesas[1]}}/pago" method="post">
+                            <div class="card text-center">
+                            <button type="submit" class="btn btn-outline-success ">Pagar</button>
+                            </div>
+                        </form>
+                    </div>                    
+                </div>
+            </div>
+            <div class="card-body text-center">
+                <div class="card-footer text-muted">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function actualizarCantidad(categoriaId, checkbox) {
+        var span = document.getElementById(categoriaId);
+        var cantidad = parseInt(span.textContent);
+
+        if (checkbox.checked) {
+            cantidad += 1;
+        } else {
+            cantidad -= 1;
+        }
+
+        span.textContent = cantidad;
+    }
+
+    function incrementarCantidad(productoId) {
+        var cantidadInput = document.getElementById(productoId);
+        var cantidad = parseInt(cantidadInput.value);
+        var limite = parseInt(cantidadInput.getAttribute("data-disponible"));
+
+        if (cantidad < limite) {
+            cantidadInput.value = cantidad + 1;
+        } else {
+            alert("Se ha alcanzado el límite máximo de cantidad.");
+        }
+    }
+    
+    function decrementarCantidad(productoId) {
+        var cantidadInput = document.getElementById(productoId);
+        var cantidad = parseInt(cantidadInput.value);
+        var limite = 0; // Cambia el límite mínimo a 0
+
+        if (cantidad > limite) {
+            cantidadInput.value = cantidad - 1;
+        } else {
+            cantidadInput.value = 0; // Establece el valor en 0 cuando se alcanza el límite mínimo
+        }
+    }
+</script>
+{% endblock %}

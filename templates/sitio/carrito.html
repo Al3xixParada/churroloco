@@ -1,0 +1,67 @@
+{% extends '/sitio/base.html'%}
+
+{% block title %}Carrito{%endblock%}
+
+{% block body%}
+<br>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h1> <img src="img/page/cart-outline.svg" alt="Carrito" width="100%" height="24px" class="">Carrito</h1>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="text-center">
+                                <th>Nombre</th>
+                                <th>Descripcion</th>
+                                <th>Precio c/u</th>
+                                <th>Cantidad</th>
+                                <th>Total del producto</th>
+                                <th colspan="2">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for carrito in carritos %}
+                            <tr>
+                                <td>{{ carrito[2] }}</td>
+                                <td>{{ carrito[3] }}</td>
+                                <td>$ {{ "{:,.0f}".format(carrito[4]) }}</td>
+                                <td>{{ carrito[5] }}</td>
+                                <td>$ {{ "{:,.0f}".format(carrito[4] * carrito[5]) }}</td>
+                                <td>
+                                    <form action="/carrito/borrar" method="post">
+                                        <input value="{{ carrito[0] }}" type="hidden" name="id_carrito" id="id_carrito">
+                                        <input value="{{ carrito[1] }}" type="hidden" name="id_producto" id="id_producto">
+                                        <input value="{{ carrito[5] }}" type="hidden" name="cantidad_carrito" id="cantidad_carrito">
+                                        <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {%endfor%}
+                        </tbody>
+                    </table>
+                    <div class="card mt-4 text-center">
+                            <h4 class="card-title">Precio Total: $ {{ "{:,.0f}".format(resultado_final) }}</h4>
+                            <a class="btn btn-outline-info" href="/pago">Pagar</a>
+
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body text-center">
+
+            <div class="card-footer text-muted">
+            </div>
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-2">
+        </div>
+
+{% endblock%}

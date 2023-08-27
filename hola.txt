@@ -1,0 +1,183 @@
+ {% if estado[0]=="Ocupado":%}
+    <button id="miBoton" class="btn btn-primary">Cambiar Color</button>
+    {% endif %}
+
+
+
+
+
+    
+
+    <h1>Mesa {{mesa[1]}} {{ mesa[4]}}</h1>
+    <div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <img class="card-img-top-comprar" src="/img/{{ result[3] }}" alt="">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card-body">
+                <h1 class="card-title">{{result[1]}}</h1>
+                <div class="mb-3">
+                    {% if result is defined and result[4] is number %}
+                        <p class="product-price">$ {{ "{:,.0f}".format(result[4]) }}</p>
+                    {% else %}
+                        <p> Manejo de caso en que {{result[4]}} no es válido</p>
+                    {% endif %}
+                    <p class="product-description">
+                        Descripción del Producto:
+                    </p>
+                    <p>
+                        {{ result[2] }}
+                    </p>
+                    <div class="mb-3 d-flex justify-content-center">
+                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                            {% if result[5] == 0 %}
+                                <!-- Botones y input deshabilitados -->
+                                <button type="button" class="btn btn-outline-primary" disabled>-</button>
+                                <input value="0" class="text-center comprar" type="text" name="cantidad" id="cantidad" min="1" data-disponible="{{ result[5] }}" readonly>
+                                <button type="button" class="btn btn-outline-primary" disabled>+</button>
+                            {% else %}
+                                <button type="button" class="btn btn-outline-primary" onclick="decrementarCantidad()">-</button>
+                                <input value="1" class="text-center comprar" type="text" name="cantidad" id="cantidad" min="1" data-disponible="{{ result[5] }}" readonly>
+                                <button type="button" class="btn btn-outline-primary" onclick="incrementarCantidad()">+</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="mb-3 d-flex justify-content-center">
+                        {% if result[5] == 0 %}
+                            <div class="alert alert-danger" role="alert">
+                                Producto agotado
+                            </div>
+                            </div>
+                            <div class="mb-3 d-flex justify-content-center">
+                                <a class="btn btn-outline-success" href="/productos">Elegir otro producto</a>
+                            </div>
+                        {% else %}
+                        <form action="/comprar/carrito" method="post" onsubmit="actualizarCantidad()">
+                            <input type="hidden" name="cantidad" id="hiddenCantidad" value="1">
+                            <input type="hidden" name="nombre_usuario" id="nombre_usuario" value="{{session['users']}}">
+                            <input type="hidden" name="txtid_producto" id="txtid_producto" value="{{ result[0] }}">
+                            <button type="submit" name="modificar" class="btn btn-primary">Agregar al carrito</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function incrementarCantidad() {
+        var cantidadInput = document.getElementById("cantidad");
+        var cantidad = parseInt(cantidadInput.value);
+        var limite = parseInt(cantidadInput.getAttribute("data-disponible"));
+
+        if (cantidad < limite) {
+            cantidadInput.value = cantidad + 1;
+        } else {
+            alert("Se ha alcanzado el límite máximo de cantidad.");
+        }
+    }
+
+    function decrementarCantidad() {
+        var cantidadInput = document.getElementById("cantidad");
+        var cantidad = parseInt(cantidadInput.value); 
+        var limite = 1;  Límite mínimo de cantidad, en este caso, no puede ser menor a 1 
+
+        if (cantidad > limite) {
+            cantidadInput.value = cantidad - 1;
+        } else {
+            alert("Se ha alcanzado el límite mínimo de cantidad.");
+        }
+    }
+
+    function actualizarCantidad() {
+        var cantidadInput = document.getElementById("cantidad");
+        var hiddenCantidadInput = document.getElementById("hiddenCantidad");
+        hiddenCantidadInput.value = cantidadInput.value;
+    }
+</script> 
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Columna izquierda que ocupa 1/3 de la pantalla -->
+            <div class="col-md-4">
+                <h2>Mi Lista</h2>
+                <ul class="list-group">
+                    <li class="list-group-item">Elemento 1</li>
+                    <li class="list-group-item">Elemento 2</li>
+                    <li class="list-group-item">Elemento 3</li>
+                    <li class="list-group-item">Elemento 4</li>
+                    <li class="list-group-item">Elemento 5</li>
+                </ul>
+            </div>
+            <!-- Columna derecha (2/3 de la pantalla) -->
+            <div class="col-md-8">
+                <!-- Contenido de la columna derecha -->
+                <!-- Aquí puedes poner contenido adicional -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Incluir Bootstrap JS (opcional, si es necesario) -->
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+
+
+
+
+
+
+
+
+
+
+
+    
+    producto_id = int(request.form['txtid_producto'])
+    usuario_nombre = request.form['nombre_usuario']
+    cantidad_seleccionada = int(request.form['cantidad'])
+
+    conexion = mysql.connect()
+    cursor = conexion.cursor()
+
+    # Verificar si el producto ya existe en el carrito para el usuario específico
+    sql = "SELECT id_carrito, cantidad FROM `carrito` WHERE `id_producto` = %s AND `id_usuario` = (SELECT id FROM `usuario` WHERE `usuario` = %s)"
+    datos = (producto_id, usuario_nombre)
+    cursor.execute(sql, datos)
+    registro_existente = cursor.fetchone()
+
+    if registro_existente:
+        # Si el registro existe, actualizamos la cantidad en el carrito
+        id_carrito = registro_existente[0]
+        nueva_cantidad_carrito = registro_existente[1] + cantidad_seleccionada
+        sql = "UPDATE `carrito` SET `cantidad` = %s, `fecha` = %s WHERE `id_carrito` = %s"
+        datos = (nueva_cantidad_carrito, "", id_carrito)
+    else:
+        # Si el registro no existe, creamos uno nuevo en el carrito
+        sql = "INSERT INTO `carrito` (`id_carrito`,`fecha`, `id_producto`, `id_usuario`, `cantidad`, `estado`) VALUES (NULL, %s, %s, (SELECT id FROM `usuario` WHERE `usuario` = %s), %s, %s)"
+        datos = ("", producto_id, usuario_nombre, cantidad_seleccionada, "Seleccionado")
+
+    # Ejecutar la consulta correspondiente (actualización o inserción)
+    cursor.execute(sql, datos)
+
+    # Actualizar la tabla "productos" restando la cantidad seleccionada por el usuario
+    sql = "SELECT cantidad_existente FROM `productos` WHERE `id` = %s"
+    cursor.execute(sql, (producto_id,))
+    cantidad_actual_producto = cursor.fetchone()[0]
+
+    nueva_cantidad_producto = cantidad_actual_producto - cantidad_seleccionada
+
+    sql = "UPDATE `productos` SET `cantidad_existente` = %s WHERE `id` = %s"
+    cursor.execute(sql, (nueva_cantidad_producto, producto_id))
+
+    conexion.commit()
+    conexion.close()
+
+    return render_template('sitio/mesa_seleccionada.html')

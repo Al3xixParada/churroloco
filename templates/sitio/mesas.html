@@ -1,0 +1,43 @@
+{% extends '/sitio/base.html' %}
+
+{% block title %}Mesas{% endblock %}
+
+{% block body %}
+<br> 
+<div class="container">
+    <div class="row">
+        {% for mesa in mesas %}
+            <div class="col-md-3">
+                <div class="card text-center card-sm" style="width: 80%; height: auto;">
+                    <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
+                        <!-- Utiliza d-flex y justify-content-center para centrar horizontalmente -->
+                        <!-- Utiliza align-items-center para centrar verticalmente -->
+                        <!-- <img class="card-img-top" src="/img/products/{{mesa[2]}}" alt="Title" style="max-width: 80%; max-height: auto;"> -->
+                        <img class="card-img-top" src="/img/page/logo.jpg" alt="Title" style="max-width: 80%; max-height: auto;">
+                    </div>
+                    <div class="card-body">
+                        {% if mesa[3]=="Ocupado":%}
+                        <h6 class="alert alert-danger" role="alert" class="card-title" style="font-size: 1.1em;">{{mesa[3]}}</h6>
+                        {%elif mesa[3]=="Disponible":%}
+                        <h6 class="alert alert-success" role="alert" class="card-title" style="font-size: 1.1em;">{{mesa[3]}}</h6>
+                        {%endif%}
+                        <h6 class="card-title" style="font-size: 1.1em;">Mesa {{mesa[1]}} {{ mesa[4]}}</h6>
+                        <p class="card text-center mb-3">
+                            <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                <form action="/mesa_seleccionada/{{mesa[1]}}">
+                                    <input value="{{mesa[0]}}" type="hidden" name="txtID" id="txtID">
+                                    {% if mesa[3]=="Ocupado":%}
+                                    <button type="submit" class="btn btn-outline-danger" style="font-size: 1em;">Pedido</button>
+                                    {%elif mesa[3]=="Disponible":%}
+                                    <button type="submit" class="btn btn-outline-success" style="font-size: 1em;">Pedido</button>
+                                    {%endif%}
+                                </form>                              
+                            </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+<ul class="list-group">
+    {% set categorias_con_productos = {} %}
+    {% set productos_seleccionados = [] %}
+    {% for tipo_produc in tipo_producto %}
+        {% set productos_filtrados = [] %}
+        {% for producto in productos %}
+            {% if producto[6] == tipo_produc[0] %}
+                {% set _ = productos_filtrados.append(producto) %}
+            {% endif %}
+        {% endfor %}
+        {% set _ = categorias_con_productos.update({tipo_produc[1]: productos_filtrados}) %}
+    {% endfor %}
+
+    {% for categoria, productos_filtrados in categorias_con_productos.items() %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div class="d-flex">
+                <!-- Agrega espacio en la izquierda y muestra información -->
+                <span class="me-3">{{ categoria }}</span>
+                <span class="badge bg-primary rounded-pill" id="num-productos-{{ categoria|replace(' ', '-') }}">0</span>
+            </div>
+        </li>
+
+        {% if productos_filtrados %}
+            {% for producto in productos_filtrados %}
+                <li class="list-group-item">
+                    <div class="d-flex align-items-center">
+                        <input class="form-check-input me-3" type="checkbox" value="{{ producto[0] }}" id="{{ producto[0] }}" onchange="actualizarCantidad('{{ categoria|replace(' ', '-') }}', this)">
+                        <!-- Muestra información a la izquierda del checkbox -->
+                        <label class="form-check-label" for="{{ producto[0] }}">{{ producto[1] }}, {{ producto[2] }}</label>
+                    </div>
+                </li>
+            {% endfor %}
+        {% else %}
+            <li class="list-group-item disabled">
+                No hay productos disponibles en esta categoría.
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>

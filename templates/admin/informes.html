@@ -1,0 +1,110 @@
+{% extends '/admin/base.html' %}
+
+{% block title %}informes {%endblock%}
+
+{% block body%}
+<script>
+    // Función para redirigir a la página /admin/informes después de descargar el archivo con un retraso de 2 segundos (2000 milisegundos)
+    function redirigirDespuesDeDescarga() {
+        setTimeout(function() {
+            window.location.href = "/admin/informes";
+        }, 10000); // 2 segundos de retraso (puedes ajustar el valor en milisegundos según tus necesidades)
+    }
+</script>
+
+
+<br>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+
+
+
+
+
+            <div class="card">
+                <div class="card-header">
+                    <h1>Generar Informes</h1>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="text-center">
+                                <th>Crear</th>
+                                <th>Crear y Descargar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a class="btn btn-outline-success" href="/generar_informe_excel">Generar Informe</a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-outline-success" href="/descargar_generar_informe_excel" download="generar_informe_excel" onclick="redirigirDespuesDeDescarga()" role="button">Descargar Informe</a> 
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <div class="card">
+                <div class="card-header">
+                    <h1>Informes</h1>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="text-center">
+                                <th>Fecha</th>
+                                <th>Descargar Informe</th>
+                                <th>Eliminar Informe</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for informe in informes %}
+
+                            <tr>
+                                <td>{{informe[1]}}</td>
+                                <td>
+                                    <a class="btn btn-outline-success" href="/admin/informes/{{informe[2]}}" download="{{informe[2]}}" role="button">Descargar</a> 
+                                </td>
+                                <td>
+                                    <form action="/admin/informes/borrar" method="post">
+                                        <input value="{{informe[0]}}" type="hidden" name="txtIDInforme" id="txtIDInforme">
+                                        <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+        </div>
+    </div>
+</div>
+
+
+{% endblock%}

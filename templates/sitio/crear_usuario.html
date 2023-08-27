@@ -1,0 +1,94 @@
+{% extends '/sitio/base.html' %}
+
+
+{% block title %}Registrarse{%endblock%}
+
+{% block body%}
+    <br> 
+
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4">
+
+
+                {% with errores = get_flashed_messages(category_filter='error') %}
+                    {% if errores %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in errores %}
+                                <strong>{{ error }}</strong>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                {% with exitos = get_flashed_messages(category_filter='success') %}
+                    {% if exitos %}
+                        <div class="alert alert-success" role="alert">
+                            {% for exito in exitos %}
+                                <strong>{{ exito }}</strong>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+    
+                <div class="card">
+                    
+                    <div class="card-header">
+                        <h1>Registro</h1>
+                    </div>
+                    <div class="card-body">
+                        <form action="/registrarse_usuario/guardar" method="post" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label for="txtnombre" class="form-label">Nombre:</label>
+                                    <input value="{{ get_flashed_messages(category_filter='nombrec')[0] }}" type="text" class="form-control" name="txtnombre" id="txtnombre"  placeholder="Ingresa su nombre" >
+                                </div>
+                                <div class="mb-3">
+                                    <label for="txtapellido" class="form-label">Apellido:</label>
+                                    <input value="{{ get_flashed_messages(category_filter='apellidoc')[0] }}" type="text" class="form-control" name="txtapellido" id="txtapellido"  placeholder="Ingresa su Apellido" >
+                                </div>
+                                <div class="mb-3">
+                                    <label for="txtImagen" class="form-label">Imagen:</label>
+                                    <input type="file" class="form-control" name="txtImagen" id="txtImagen" aria-describedby="helpId" placeholder="Seleccione la imagen" value="{{ get_flashed_messages(category_filter='archivoc')[0] }}">
+                                    {% with archivoss = get_flashed_messages(category_filter='archivoc') %}
+                                        {% if archivoss %}
+                                            <img src="/img/users/{{ get_flashed_messages(category_filter='archivoc')[0] }}" alt="Imagen actual" width="100">
+                                        {% endif %}
+                                    {% endwith %}
+                                    
+                                </div>
+                                <div class="mb-3">
+                                    <label for="txtusuario" class="form-label">Usuario:</label>
+                                    <input value="{{ get_flashed_messages(category_filter='usuarioc')[0] }}" type="text" class="form-control" name="txtusuario" id="txtusuario"  placeholder="Ingresa su Usuario" >
+                                </div>
+                                <div class="mb-3">
+                                    <label for="txtpassword" class="form-label">Contraseña:</label>
+                                    <input value="{{ get_flashed_messages(category_filter='contraseñac')[0] }}" type="password" class="form-control" name="txtpassword" id="txtpassword"  placeholder="Ingresa su Contraseña" >
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-outline-primary">Registrarse</button>
+                                </div>
+                        </form>
+                    </div>
+
+                        <div class="card-footer text-muted">
+
+                        </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+            </div>
+
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+
+{%endblock%}

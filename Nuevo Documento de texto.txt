@@ -1,0 +1,19 @@
+NB: solo se admiten aplicaciones WSGI, por lo que incluye todo lo creado con Django, Flask, Bottle, etc., pero servidores personalizados que utilizan, por ejemplo, Tornado, probablemente no funcionará.
+
+Implementación de una aplicación web local (Parte 7 de 7)
+
+Armado con el nombre y la ubicación de su aplicación WSGI, ahora debe ir a la Web pestaña , Haga clic en Agregar nueva aplicación web y luego elija Configuración manual . Haga clic hasta el final.
+
+Una vez que haya terminado, se le mostrará una página con las opciones de configuración para su sitio web. Si está utilizando un virtualenv, ingrese la ruta al mismo en el campo apropiado cerca de la parte superior.
+
+A continuación, queremos editar el archivo WSGI que se generó para usted. Haga clic en él (hay un enlace en la sección "Código") y eche un vistazo a comentarios, que proporcionan algunos ejemplos sobre cómo importar su aplicación. El principal los pasos son:
+
+    Agregar la ruta en la que se encuentra su aplicación sys.path
+    Importar la aplicación WSGI y llamarla application.
+
+Por ejemplo, si su aplicación se encuentra en /home/myusername/myproject/myapp.py y Allí, la aplicación WSGI es una variable llamada app, querrás:
+
+sys.path.append('/home/mysusername/myproject')
+from myapp import app as application
+
+¡Esperamos que eso ayude! Utilice el botón Enviar comentarios de arriba si se encuentra con Cualquier problema, siempre estamos aquí para ayudar.  

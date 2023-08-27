@@ -1,0 +1,48 @@
+{% extends 'sitio/base.html' %}
+
+{% block title %}Pedidos Activos{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="mt-4">Pedidos Activos</h1>
+
+    {% if pedidos_activos %}
+    {% set mesas = [] %}
+    
+    {% for pedido in pedidos_activos %}
+        {% if pedido[0] not in mesas %}
+            {% set _ = mesas.append(pedido[0]) %}
+        {% endif %}
+    {% endfor %}
+    
+    {% for mesa in mesas %}
+        <li class="list-group-item d-flex justify-content-between align-items-center" style="background-color: lightblue; padding: 10px;">
+            <div class="d-flex align-items-center">
+                Mesa {{ mesa }}
+            </div>
+        </li>
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido_mesa in pedidos_activos if pedido_mesa[0] == mesa %}
+                <tr>
+                    <td>{{ pedido_mesa[1] }}</td>
+                    <td>${{ pedido_mesa[2] }}</td>
+                    <td>{{ pedido_mesa[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+    
+    {% else %}
+    <p>No hay pedidos activos en este momento.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,168 @@
+            th,td{
+              text-align: center;
+              vertical-align: middle;
+            }
+            .cuadro{
+			      background-color: #198754;
+			      color: #ffffff;
+            text-align: center;
+		        }
+            h1,h2{
+              text-align: center;
+            }
+            footer {
+			      background-color: #000000;
+			      color: #ffffff;
+			      padding: 20px;
+			      text-align: center;
+		        }
+            table{
+              vertical-align: middle;
+            }
+            table {
+			      border-collapse: collapse;
+			      width: 100%;
+		        }
+            p{
+              text-align: center;
+              vertical-align: middle;
+            }
+            #imagen{
+              vertical-align: middle;
+              text-align: center;
+            }
+            
+            
+            .logo_imagen{
+              height:25px;
+
+            }
+            .navbar-text{
+              height: 2px;
+              padding: 2px ;
+            }
+
+            .navbar.login {
+              border-color: #158cba;
+              left: -20px;
+
+          }
+
+            .navbar.text-aumento{
+              font-size: 20px;
+
+            }
+            .image-container {
+              max-width: 262px;
+              max-height: 262px;
+              min-width: 262px;
+              min-height: 262px;
+              overflow: hidden;
+            }
+            
+            .card-img-top {
+              width: 100%;
+              
+              max-height: 262px;
+              object-fit: cover;
+              margin-bottom: 10px;
+              /* El mio */
+              /* max-width: 262px;
+              max-height: 262px;
+              display: block;
+              object-fit: contain; */
+            }
+            .centered {
+              position: fixed;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            }
+            .centered_productos{
+              top: 50%;
+              left: 50%;
+              transform: translate(5%, 0%);
+            }
+            .movericons{
+              transform: translate(-5%, -5%);
+            }
+            .comprar{
+              margin: 0px 0px 0px -1px;
+              padding: 6px 12px;
+              color:#158cba;
+              border: 1px solid #158cba;
+              display: inline-block; /* Para que el borde se ajuste al contenido */
+              padding: 10px;
+            }
+            .custom-image {
+              min-width: 620px;
+              max-width: 620px;
+              width: 100%;
+              height: auto;
+          }
+    
+        /* Estilos adicionales para el div contenedor */
+        .image-container {
+            width: 100%;
+            padding-top: 100%; /* Establecemos un 100% del ancho como altura para crear el cuadrado */
+            position: relative;
+        }
+    
+        /* Ajustamos el tamaño de la imagen dentro del contenedor */
+        .image-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* La imagen se recortará para ajustarse al cuadrado */
+        }
+        .card-img-top-comprar {
+          width: 100%;
+          aspect-ratio: 1/1; /* Relación de aspecto 1:1 para el cuadrado */
+          max-height: 691px;
+          object-fit: cover;
+          margin-bottom: 10px;
+        }
+        
+
+        tbody{
+        text-align: center;
+        }
+        thead{
+          text-align: center;
+        }
+        .masked-text {
+            font-family: monospace;
+            /* color: transparent; */
+            color: #000000;
+        }
+        .visible {
+            color: black;
+        }
+
+
+        /* En tu archivo de estilos personalizado */
+        .card-sm {
+          width: 12rem; /* Ancho de la tarjeta */
+          height: auto; /* Altura automática según el contenido */
+        }
+
+        .card-title {
+          font-size: 16px; /* Tamaño de fuente del título */
+        }
+
+        .btn-outline-primary {
+          font-size: 14px; /* Tamaño de fuente del botón */
+        }
+        
+
+
+
+        
+        .producto-sin-existencia {
+          background-color: #eee; /* Color de fondo gris */
+          pointer-events: none; /* Evita que los elementos sean interactivos */
+          opacity: 0.5; /* Reduce la opacidad para denotar desactivación */
+      }
+      
